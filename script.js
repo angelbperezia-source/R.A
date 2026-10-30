@@ -1252,7 +1252,7 @@ function initAnimaciones() {
     }
 
     var objetivos = document.querySelectorAll(
-        "main > section > h2, .grid-servicios > .card, .tienda-encabezado, .tienda-ver-mas, " +
+        "main > section > h2, .grid-servicios > .card, .proceso-pasos > li, .tienda-encabezado, .tienda-ver-mas, " +
         ".tienda-carrito, #form-presupuesto, .contactos-directos, .tienda-productos > .producto-card"
     );
 
