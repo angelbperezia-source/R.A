@@ -22,3 +22,144 @@
         document.body.style.setProperty("--my", e.clientY + "px");
     }, { passive: true });
 })();
+
+/* ---------- Fondo de panal interactivo (reacciona al mouse) ---------- */
+(function () {
+    var R = 30;                              // radio de cada hexágono
+    var W = Math.sqrt(3) * R, H = 1.5 * R;   // separación horizontal / vertical
+    var reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var oscuro = matchMedia("(prefers-color-scheme: dark)");
+    var cv = document.createElement("canvas");
+    cv.setAttribute("aria-hidden", "true");
+    cv.className = "panal-fondo";
+    var ctx = cv.getContext("2d");
+    if (!ctx) return;
+    document.documentElement.classList.add("panal-activo");
+    document.body.insertBefore(cv, document.body.firstChild);
+
+    var base = document.createElement("canvas"), bctx = base.getContext("2d");
+    var vw = 0, vh = 0, dpr = 1, centros = [];
+    var px = -9999, py = -9999, sx = -9999, sy = -9999, poder = 0, objetivo = 0;
+    var ondas = [], corriendo = false;
+
+    function trazo(c, x, y, r) {
+        for (var i = 0; i < 6; i++) {
+            var a = Math.PI / 180 * (60 * i - 90);
+            var X = x + r * Math.cos(a), Y = y + r * Math.sin(a);
+            i ? c.lineTo(X, Y) : c.moveTo(X, Y);
+        }
+        c.closePath();
+    }
+
+    function colores() {
+        return oscuro.matches
+            ? { linea: "132,213,233", brillo: "69,34,184", base: "rgba(150,160,156,0.20)" }
+            : { linea: "69,34,184", brillo: "132,213,233", base: "rgba(119,119,119,0.24)" };
+    }
+
+    function medir() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        vw = innerWidth; vh = innerHeight;
+        cv.width = base.width = Math.round(vw * dpr);
+        cv.height = base.height = Math.round(vh * dpr);
+        cv.style.width = vw + "px"; cv.style.height = vh + "px";
+        centros = [];
+        for (var fila = -1, y = -R; y < vh + 2 * R; fila++, y += H) {
+            var desf = (fila & 1) ? W / 2 : 0;
+            for (var x = -W + desf; x < vw + W; x += W) centros.push(x, y);
+        }
+        pintarBase();
+        dibujar(performance.now());
+    }
+
+    function pintarBase() {
+        bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        bctx.clearRect(0, 0, vw, vh);
+        bctx.strokeStyle = colores().base;
+        bctx.lineWidth = 1;
+        bctx.beginPath();
+        for (var i = 0; i < centros.length; i += 2) trazo(bctx, centros[i], centros[i + 1], R);
+        bctx.stroke();
+    }
+
+    function dibujar(t) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(base, 0, 0);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (reducido) return false;
+
+        var c = colores(), seg = t / 1000, RADIO = 210;
+        var activo = poder > 0.01 || ondas.length > 0;
+        if (!activo) return false;
+
+        for (var k = ondas.length - 1; k >= 0; k--) {
+            if (seg - ondas[k].t0 > 1.4) ondas.splice(k, 1);
+        }
+
+        for (var i = 0; i < centros.length; i += 2) {
+            var cx = centros[i], cy = centros[i + 1];
+            var dx = cx - sx, dy = cy - sy, d = Math.sqrt(dx * dx + dy * dy);
+            var f = 0;
+            if (d < RADIO) { f = 1 - d / RADIO; f = f * f * (3 - 2 * f) * poder; }
+            var onda = 0;
+            for (var j = 0; j < ondas.length; j++) {
+                var o = ondas[j], edad = seg - o.t0;
+                var ox = cx - o.x, oy = cy - o.y;
+                var dd = Math.sqrt(ox * ox + oy * oy), anillo = edad * 420;
+                var q = (dd - anillo) / 46;
+                onda = Math.max(onda, Math.exp(-q * q) * (1 - edad / 1.4));
+            }
+            var g = Math.max(f, onda);
+            if (g < 0.02) continue;
+
+            // los hexágonos se apartan del cursor y ondulan
+            var empuje = f * 9 + onda * 5, norm = d || 1;
+            var ex = cx + (dx / norm) * empuje + Math.sin(seg * 2.4 + cx * 0.04) * 2.2 * g;
+            var ey = cy + (dy / norm) * empuje + Math.cos(seg * 2.1 + cy * 0.04) * 2.2 * g;
+            var r = R * (0.9 + 0.14 * g);
+
+            ctx.beginPath(); trazo(ctx, ex, ey, r);
+            ctx.fillStyle = "rgba(" + c.linea + "," + (0.07 * g).toFixed(3) + ")";
+            ctx.fill();
+            ctx.lineWidth = 3.2 * g + 1;
+            ctx.strokeStyle = "rgba(" + c.brillo + "," + (0.16 * g).toFixed(3) + ")";
+            ctx.stroke();
+            ctx.lineWidth = 0.9 + 1.2 * g;
+            ctx.strokeStyle = "rgba(" + c.linea + "," + Math.min(0.9, 0.25 + 0.7 * g).toFixed(3) + ")";
+            ctx.stroke();
+        }
+        return true;
+    }
+
+    function ciclo(t) {
+        sx += (px - sx) * 0.16; sy += (py - sy) * 0.16;
+        poder += (objetivo - poder) * 0.08;
+        var sigue = dibujar(t);
+        if (sigue) requestAnimationFrame(ciclo); else corriendo = false;
+    }
+
+    function despertar() {
+        if (reducido || corriendo) return;
+        corriendo = true;
+        requestAnimationFrame(ciclo);
+    }
+
+    addEventListener("pointermove", function (e) {
+        if (sx < -5000) { sx = e.clientX; sy = e.clientY; }
+        px = e.clientX; py = e.clientY; objetivo = 1; despertar();
+    }, { passive: true });
+    addEventListener("pointerdown", function (e) {
+        px = e.clientX; py = e.clientY;
+        if (sx < -5000) { sx = px; sy = py; }
+        ondas.push({ x: e.clientX, y: e.clientY, t0: performance.now() / 1000 });
+        objetivo = 1; despertar();
+    }, { passive: true });
+    document.addEventListener("pointerleave", function () { objetivo = 0; despertar(); });
+    document.documentElement.addEventListener("mouseleave", function () { objetivo = 0; despertar(); });
+    addEventListener("pointerup", function (e) { if (e.pointerType === "touch") { objetivo = 0; despertar(); } }, { passive: true });
+    var rz; addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(medir, 120); });
+    if (oscuro.addEventListener) oscuro.addEventListener("change", function () { pintarBase(); despertar(); dibujar(performance.now()); });
+
+    medir();
+})();

@@ -21,6 +21,8 @@
     --suave: #56645c;
     --ok: #84d5e9;
     --alerta: #4522b8;
+    --sombra-card-hover: 0 14px 30px rgba(69, 34, 184, 0.16), 0 0 24px rgba(132, 213, 233, 0.25);
+    --brillo-card-hover: rgba(255, 255, 255, 0.72);
     --r-s: 4px;
     --r-m: 10px;
 }
@@ -971,6 +973,8 @@ header { background-color: rgba(255, 255, 255, 0.92); }
         --alerta: #4522b8;
         --vivo: #84d5e9;
         --metal: linear-gradient(135deg, #f4f6f5, #8a9692 22%, #2c3331 48%, #cfd6d3 74%, #6f7a76);
+        --sombra-card-hover: 0 16px 34px rgba(0, 0, 0, 0.45), 0 0 30px rgba(132, 213, 233, 0.25), 0 0 12px rgba(69, 34, 184, 0.2);
+        --brillo-card-hover: rgba(132, 213, 233, 0.24);
     }
 
     body {
@@ -1001,3 +1005,98 @@ header { background-color: rgba(255, 255, 255, 0.92); }
     .admin-volver:hover, .admin-boton-secundario:hover { color: var(--violeta); }
     .lk-ra { text-shadow: none; }
 }
+
+.card {
+    transition: transform 220ms ease, border-color 200ms ease, background 200ms ease, box-shadow 220ms ease;
+}
+
+.card::after {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(110deg, transparent 25%, var(--brillo-card-hover) 50%, transparent 75%);
+    content: "";
+    pointer-events: none;
+    transform: translateX(-140%);
+    transition: transform 650ms ease;
+}
+
+.card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.card:hover,
+.card:focus-visible {
+    z-index: 1;
+    border-color: transparent;
+    border-left-color: var(--cian);
+    background: linear-gradient(var(--panel-2), var(--panel-2)) padding-box, var(--metal) border-box;
+    box-shadow: var(--sombra-card-hover);
+    transform: translateY(-5px) scale(1.015);
+}
+
+.card:hover::after,
+.card:focus-visible::after { transform: translateX(140%); }
+
+@media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+    .card:hover,
+    .card:focus-visible { transform: none; }
+}
+
+/* ---------- Efecto "desparrame" de paneles al pasar el mouse (día / noche) ---------- */
+:root {
+    /* Día: sombra suave violeta + halo cian que se abre */
+    --desp-halo: 0 0 0 6px rgba(132, 213, 233, 0.22);
+    --desp-cerca: 0 14px 28px -4px rgba(69, 34, 184, 0.20);
+    --desp-lejos: 0 34px 70px -10px rgba(69, 34, 184, 0.22);
+    --desp-reposo: 0 0 0 0 rgba(132, 213, 233, 0), 0 0 0 0 rgba(69, 34, 184, 0), 0 0 0 0 rgba(69, 34, 184, 0);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Noche: resplandor neón cian/violeta que se esparce alrededor */
+        --desp-halo: 0 0 0 5px rgba(132, 213, 233, 0.10);
+        --desp-cerca: 0 0 32px 4px rgba(132, 213, 233, 0.30);
+        --desp-lejos: 0 26px 70px 6px rgba(69, 34, 184, 0.45);
+    }
+}
+
+.taller-item,
+.producto-card,
+.ubicacion-panel,
+.tienda-carrito,
+.admin-card {
+    transition: transform 320ms cubic-bezier(.2, .8, .2, 1), box-shadow 380ms ease, border-color 200ms ease;
+}
+
+@media (hover: hover) {
+    .taller-item:hover,
+    .producto-card:hover,
+    .ubicacion-panel:hover,
+    .tienda-carrito:hover,
+    .admin-card:hover {
+        transform: translateY(-4px) scale(1.012);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            var(--desp-halo),
+            var(--desp-cerca),
+            var(--desp-lejos);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .taller-item, .producto-card, .ubicacion-panel, .tienda-carrito, .admin-card { transition: box-shadow 200ms ease; }
+    .taller-item:hover, .producto-card:hover, .ubicacion-panel:hover,
+    .tienda-carrito:hover, .admin-card:hover { transform: none; }
+}
+
+/* ---------- Fondo de panal interactivo ---------- */
+.panal-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+.panal-activo body { background: var(--fondo); }
