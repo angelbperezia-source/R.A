@@ -12,12 +12,12 @@
         --surface: #fff;
         --ink: #20271f;
         --muted: #7b8379;
-        --green: #315d45;
-        --green-dark: #254a36;
-        --lime: #d9ee91;
+        --green: #84d5e9;
+        --green-dark: #4522b8;
+        --lime: #84d5e9;
         --line: #e8ebe5;
-        --red: #b84242;
-        --shadow: 0 16px 50px rgba(37, 55, 40, 0.07);
+        --red: #4522b8;
+        --shadow: 0 16px 50px rgba(69, 34, 184, 0.08);
       }
 
       * {
@@ -162,7 +162,7 @@
         height: 34px;
         place-items: center;
         border-radius: 50%;
-        background: #e4eadf;
+        background: #e5f7fb;
         color: var(--green);
         font-size: 0.8rem;
       }
@@ -212,7 +212,7 @@
         border: 0;
         border-radius: 10px;
         background: var(--green);
-        color: white;
+        color: var(--ink);
         font-size: 0.87rem;
         font-weight: 650;
         transition: background 160ms ease, transform 160ms ease;
@@ -249,7 +249,7 @@
         flex: 0 0 auto;
         place-items: center;
         border-radius: 13px;
-        background: #edf2e9;
+        background: #e5f7fb;
         color: var(--green);
         font-size: 1.2rem;
       }
@@ -333,8 +333,8 @@
 
       .search:focus,
       input:focus {
-        border-color: #82a58d;
-        box-shadow: 0 0 0 3px rgba(49, 93, 69, 0.1);
+        border-color: #84d5e9;
+        box-shadow: 0 0 0 3px rgba(132, 213, 233, 0.3);
       }
 
       .table-wrap {
@@ -385,7 +385,7 @@
         flex: 0 0 auto;
         place-items: center;
         border-radius: 10px;
-        background: #f0f3ed;
+        background: #e5f7fb;
         color: var(--green);
       }
 
@@ -395,8 +395,8 @@
         gap: 6px;
         padding: 6px 9px;
         border-radius: 99px;
-        background: #edf5ed;
-        color: #357143;
+        background: #e5f7fb;
+        color: #226173;
         font-size: 0.74rem;
         font-weight: 650;
       }
@@ -407,8 +407,8 @@
       }
 
       .stock-pill.out {
-        background: #fceaea;
-        color: #ae3d3d;
+        background: #f1edff;
+        color: var(--red);
       }
 
       .actions {
@@ -435,8 +435,8 @@
       }
 
       .icon-button.delete:hover {
-        border-color: #f0caca;
-        background: #fff6f6;
+        border-color: #c6b8f1;
+        background: #f1edff;
         color: var(--red);
       }
 

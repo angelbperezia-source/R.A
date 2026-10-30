@@ -1,26 +1,26 @@
 /* ====================================================
-   TECNO R.A. - Diseño tecnológico (modo oscuro)
+   TECNO R.A. - Tema automático día/noche
    Títulos: Space Grotesk | Texto: DM Sans
    ==================================================== */
 
 :root {
-    color-scheme: dark;
+    color-scheme: light;
     font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 
-    --fondo: #050605;
-    --panel: #0b0e0d;
-    --panel-2: #121615;
-    --linea: #232a28;
-    --linea-viva: #8a9692;
-    --cian: #a8e6c3;
-    --violeta: #e5484d;
-    --texto: #f1f4f2;
-    --suave: #9aa6a2;
-    --ok: #4ade80;
-    --alerta: #ff8aa0;
+    --fondo: #ffffff;
+    --panel: #ffffff;
+    --panel-2: #eaf0ec;
+    --linea: #d7e0da;
+    --linea-viva: #87958c;
+    --cian: #84d5e9;
+    --violeta: #4522b8;
+    --texto: #17211b;
+    --suave: #56645c;
+    --ok: #84d5e9;
+    --alerta: #4522b8;
     --r-s: 4px;
     --r-m: 10px;
 }
@@ -39,12 +39,7 @@ html {
 body {
     min-width: 280px;
     margin: 0;
-    background:
-        radial-gradient(ellipse 40rem 26rem at 85% 0%, rgba(229, 72, 77, 0.16), transparent),
-        radial-gradient(ellipse 36rem 24rem at 0% 22%, rgba(168, 230, 195, 0.09), transparent),
-        linear-gradient(rgba(138, 150, 146, 0.14) 1px, transparent 1px) 0 0 / 44px 44px,
-        linear-gradient(90deg, rgba(138, 150, 146, 0.14) 1px, transparent 1px) 0 0 / 44px 44px,
-        var(--fondo);
+    background: var(--fondo);
     color: var(--texto);
     font-size: 1rem;
     line-height: 1.65;
@@ -79,7 +74,7 @@ header {
     z-index: 100;
     top: 0;
     border-bottom: 1px solid var(--linea);
-    background: rgba(5, 6, 5, 0.82);
+    background: rgba(255, 255, 255, 0.88);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
     transition: border-color 250ms ease;
@@ -113,7 +108,7 @@ header.header-scroll { border-bottom-color: var(--linea-viva); }
     height: 0.95rem;
     border: 2px solid var(--cian);
     border-radius: 3px;
-    box-shadow: 0 0 0 3px var(--fondo), 0 0 0 4px var(--linea-viva), 0 0 14px rgba(168, 230, 195, 0.45);
+    box-shadow: 0 0 0 3px var(--fondo), 0 0 0 4px var(--linea-viva), 0 0 14px rgba(205, 229, 235, 0.45);
     content: "";
 }
 
@@ -194,7 +189,7 @@ main > section {
     border: 0;
     border-radius: var(--r-s);
     background: var(--cian);
-    box-shadow: 0 0 0 1px var(--cian), 0 0 24px rgba(168, 230, 195, 0.28);
+    box-shadow: 0 0 0 1px var(--cian), 0 0 24px rgba(132, 213, 233, 0.35);
     color: #050a07;
     font-weight: 700;
     text-decoration: none;
@@ -204,8 +199,8 @@ main > section {
 
 .btn-principal:hover,
 .btn-enviar:hover:not(:disabled) {
-    background: #c4f0d8;
-    box-shadow: 0 0 0 1px #c4f0d8, 0 0 36px rgba(168, 230, 195, 0.5);
+    background: #a4e1ef;
+    box-shadow: 0 0 0 1px #a4e1ef, 0 0 36px rgba(132, 213, 233, 0.55);
 }
 
 .btn-enviar:disabled {
@@ -218,38 +213,49 @@ main > section {
 /* Teléfono con seguimiento de reparación */
 .equipo {
     position: relative;
-    width: min(100%, 19rem);
-    aspect-ratio: 9 / 16;
+    width: min(100%, 21rem);
+    aspect-ratio: 1856 / 3672;
     justify-self: center;
-    padding: 0.8rem;
-    border: 2px solid var(--linea-viva);
-    border-radius: 2.4rem;
-    background: var(--panel);
-    box-shadow: 0 0 70px rgba(229, 72, 77, 0.2), inset 0 0 30px rgba(168, 230, 195, 0.05);
+    background: transparent;
 }
 
-.equipo::before {
+.equipo-marco {
     position: absolute;
-    top: 1.1rem;
+    top: 50%;
     left: 50%;
-    z-index: 2;
-    width: 4rem;
-    height: 0.6rem;
-    border-radius: 999px;
-    background: var(--fondo);
-    content: "";
-    transform: translateX(-50%);
+    z-index: 1;
+    width: 248%;
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
 }
 
 .equipo-pantalla {
-    position: relative;
+    position: absolute;
+    top: 0.2%;
+    left: 4.2%;
+    z-index: 2;
     display: flex;
-    height: 100%;
+    width: 91.8%;
+    height: 96.9%;
     flex-direction: column;
     overflow: hidden;
     padding: 3rem 1.3rem 1.4rem;
-    border-radius: 1.7rem;
+    border-radius: 8% / 3.5%;
     background: var(--fondo);
+}
+
+.equipo-pantalla::before {
+    position: absolute;
+    top: 0;
+    left: 25%;
+    z-index: 2;
+    width: 50%;
+    height: 5%;
+    border-radius: 0 0 1rem 1rem;
+    background: #020303;
+    content: "";
 }
 
 .equipo-pantalla::after {
@@ -257,7 +263,7 @@ main > section {
     right: 0;
     left: 0;
     height: 3rem;
-    background: linear-gradient(transparent, rgba(168, 230, 195, 0.22), transparent);
+    background: linear-gradient(transparent, rgba(132, 213, 233, 0.28), transparent);
     content: "";
     opacity: 0;
     animation: barrido 2.4s ease-out 0.4s 1;
@@ -325,8 +331,8 @@ main > section {
 }
 
 @keyframes pulso {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.6); }
-    50% { box-shadow: 0 0 0 7px rgba(229, 72, 77, 0); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(69, 34, 184, 0.6); }
+    50% { box-shadow: 0 0 0 7px rgba(69, 34, 184, 0); }
 }
 
 .equipo-pie {
@@ -575,7 +581,7 @@ main > section {
 .admin-form input:focus, .admin-form select:focus, .admin-estado-select:focus, .admin-stock-cantidad:focus {
     border-color: var(--cian);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(168, 230, 195, 0.22);
+    box-shadow: 0 0 0 3px rgba(132, 213, 233, 0.35);
 }
 
 #form-presupuesto .btn-enviar { margin-top: 0.6rem; }
@@ -591,6 +597,27 @@ main > section {
     padding: 0;
     list-style: none;
 }
+
+.celu-contacto {
+    display: grid;
+    grid-template-columns: minmax(5rem, 0.65fr) minmax(0, 1.35fr);
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--linea-viva);
+    border-radius: var(--r-m);
+    background:
+        radial-gradient(ellipse at 18% 50%, rgba(132, 213, 233, 0.18), transparent 70%),
+        var(--fondo);
+}
+
+.celu-contacto-visual { display: grid; min-width: 0; place-items: center; }
+.celu-contacto .celu-hero { width: min(100%, 6.5rem); }
+.celu-contacto-texto { min-width: 0; }
+.celu-contacto-texto .tienda-etiqueta { margin-bottom: 0.55rem; font-size: 0.68rem; letter-spacing: 0.12em; }
+.celu-contacto-texto h4 { margin: 0 0 0.45rem; font-family: "Space Grotesk", sans-serif; font-size: 1.1rem; line-height: 1.2; }
+.celu-contacto-texto > p:last-child { margin: 0; color: var(--suave); font-size: 0.88rem; line-height: 1.45; }
 
 .contactos-directos li a { display: grid; min-height: 3.2rem; place-items: center; text-decoration: none; }
 
@@ -638,7 +665,7 @@ main > section {
     border: 1px solid var(--linea-viva);
     border-radius: var(--r-m);
     background: var(--panel);
-    box-shadow: 0 0 36px rgba(168, 230, 195, 0.07);
+    box-shadow: 0 0 36px rgba(132, 213, 233, 0.12);
 }
 
 .ubicacion-encabezado h2 { margin-bottom: 0.75rem; }
@@ -730,7 +757,7 @@ footer {
     gap: 0.75rem 1.5rem;
     padding: 1.75rem max(1.5rem, calc((100% - 1120px) / 2));
     border-top: 1px solid var(--linea);
-    background: rgba(5, 6, 5, 0.85);
+    background: rgba(255, 255, 255, 0.92);
     color: var(--suave);
     font-size: 0.9rem;
 }
@@ -853,28 +880,27 @@ footer p { margin: 0; }
     place-items: center;
     border-radius: 50%;
     background: var(--cian);
-    box-shadow: 0 0 0 1px var(--cian), 0 0 26px rgba(168, 230, 195, 0.45);
+    box-shadow: 0 0 0 1px var(--cian), 0 0 26px rgba(132, 213, 233, 0.5);
     color: #050a07;
     transition: box-shadow 200ms ease, background 200ms ease;
 }
 
-.wa-flotante:hover { background: #c4f0d8; box-shadow: 0 0 0 1px #c4f0d8, 0 0 38px rgba(168, 230, 195, 0.65); }
+.wa-flotante:hover { background: #a4e1ef; box-shadow: 0 0 0 1px #a4e1ef, 0 0 38px rgba(132, 213, 233, 0.7); }
 .wa-flotante svg { width: 1.7rem; height: 1.7rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 
-/* ---------- Rediseño v3: negro, verde pastel, bordes metálicos y líneas rojas ---------- */
-@property --vivo { syntax: "<color>"; inherits: true; initial-value: #a8e6c3; }
-@keyframes vivo { 0%, 100% { --vivo: #a8e6c3; } 28% { --vivo: #f1f4f2; } 50% { --vivo: #aeb8b4; } 75% { --vivo: #e5484d; } }
-:root { --metal: linear-gradient(135deg, #f4f6f5, #8a9692 22%, #2c3331 48%, #cfd6d3 74%, #6f7a76); animation: vivo 20s ease-in-out infinite; }
+/* ---------- Rediseño v3: cian, violeta y bordes metálicos ---------- */
+@property --vivo { syntax: "<color>"; inherits: true; initial-value: #84d5e9; }
+@keyframes vivo { 0%, 100% { --vivo: #84d5e9; } 28% { --vivo: #ffffff; } 50% { --vivo: #aeb8b4; } 75% { --vivo: #4522b8; } }
+:root { --vivo: #84d5e9; --metal: linear-gradient(135deg, #ffffff, #aebbb4 22%, #e0e8e3 48%, #ffffff 74%, #87938d); }
 body {
     background:
-        radial-gradient(520px circle at var(--mx, 82%) var(--my, 8%), rgba(168, 230, 195, 0.07), transparent 70%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 2l26 15v30L28 62 2 47V17zM28 62v35' fill='none' stroke='%23a8e6c3' stroke-opacity='.055'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 2l26 15v30L28 62 2 47V17zM28 62v35' fill='none' stroke='%23777' stroke-opacity='.24'/%3E%3C/svg%3E"),
         var(--fondo);
-    background-attachment: fixed, scroll, scroll;
+    background-attachment: fixed, scroll;
 }
-h1, h2 { text-shadow: 0 0 26px rgba(255, 255, 255, 0.16); }
+h1, h2 { text-shadow: 0 0 26px rgba(69, 34, 184, 0.1); }
 h2::after { content: ""; display: block; width: 3.4rem; height: 3px; margin-top: 0.8rem; background: var(--violeta); }
-header { background-color: rgba(5, 6, 5, 0.88); }
+header { background-color: rgba(255, 255, 255, 0.92); }
 .logo { position: relative; }
 .logo-img::before { display: none; }
 .logo::after { content: ""; position: absolute; right: 0; bottom: -0.45rem; left: 0; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--vivo), transparent); }
@@ -892,13 +918,12 @@ header { background-color: rgba(5, 6, 5, 0.88); }
 .lk-tecno, .lk-ra { display: block; font-family: "Archivo Black", "Space Grotesk", Arial, sans-serif; line-height: 0.95; }
 .lk-tecno { color: var(--texto); font-size: clamp(2.1rem, 8.2vw, 4.3rem); text-shadow: 0 0 26px rgba(255, 255, 255, 0.3); }
 .lk-fila { display: flex; align-items: center; gap: 1rem; margin-top: 0.15em; }
-.lk-ra { color: var(--cian); font-size: clamp(1.8rem, 6.6vw, 3.4rem); text-shadow: 0 0 22px rgba(168, 230, 195, 0.35); }
+.lk-ra { color: var(--cian); font-size: clamp(1.8rem, 6.6vw, 3.4rem); text-shadow: 0 0 22px rgba(132, 213, 233, 0.45); }
 .lk-linea { position: relative; flex: 1; height: 3px; margin-left: 0.5rem; border-radius: 2px; background: var(--vivo); }
 .lk-linea::before { content: ""; position: absolute; top: 50%; left: -0.55rem; width: 0.8rem; height: 0.8rem; border-radius: 50%; background: var(--violeta); transform: translateY(-50%); }
 .lk-tag { display: block; margin-top: 0.7em; color: var(--suave); font-size: clamp(0.58rem, 1.9vw, 0.82rem); font-weight: 500; letter-spacing: 0.4em; }
 /* Celulares animados */
-.hero-visual { display: grid; justify-items: center; gap: 1.5rem; }
-.celu-hero { width: 8.5rem; }
+.hero-visual { display: grid; justify-items: center; gap: 1.5rem; overflow-x: clip; }
 .celu { display: block; width: 100%; height: auto; overflow: visible; }
 .taller-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
 .taller-item { margin: 0; padding: 1.5rem; border-radius: var(--r-m); text-align: center; }
@@ -922,10 +947,57 @@ header { background-color: rgba(5, 6, 5, 0.88); }
 @keyframes pulso { 0%, 100% { opacity: 0.08; } 50% { opacity: 0.22; } }
 @keyframes gira { to { transform: rotate(360deg); } }
 @keyframes progreso { 0% { transform: scaleX(0); opacity: 1; } 80%, 95% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
-@media (max-width: 760px) { .taller-grid { grid-template-columns: 1fr; } .celu-hero { width: 7rem; } }
+@media (max-width: 760px) { .taller-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) {
     :root { animation: none; }
     .celu * { animation: none !important; }
     .celu .g-rota, .celu .infectado, .celu .barrido { opacity: 0; }
     .celu .ok, .celu .limpio { opacity: 1; }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --fondo: #050605;
+        --panel: #0b0e0d;
+        --panel-2: #121615;
+        --linea: #232a28;
+        --linea-viva: #8a9692;
+        --cian: #84d5e9;
+        --violeta: #4522b8;
+        --texto: #f1f4f2;
+        --suave: #9aa6a2;
+        --ok: #84d5e9;
+        --alerta: #4522b8;
+        --vivo: #84d5e9;
+        --metal: linear-gradient(135deg, #f4f6f5, #8a9692 22%, #2c3331 48%, #cfd6d3 74%, #6f7a76);
+    }
+
+    body {
+        background:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 2l26 15v30L28 62 2 47V17zM28 62v35' fill='none' stroke='%23777' stroke-opacity='.24'/%3E%3C/svg%3E"),
+            var(--fondo);
+    }
+
+    h1, h2 { text-shadow: 0 0 26px rgba(255, 255, 255, 0.16); }
+    header { background-color: rgba(5, 6, 5, 0.88); }
+    footer { background: rgba(5, 6, 5, 0.85); }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-reduced-motion: no-preference) {
+    :root { animation: vivo 20s ease-in-out infinite; }
+}
+
+@media (prefers-color-scheme: light) {
+    :focus-visible { outline-color: var(--violeta); }
+    .equipo-pasos .hecho::before { border-color: var(--violeta); background: var(--violeta); }
+    .equipo-pasos .hecho::after { background: var(--violeta) !important; }
+    .tienda-etiqueta, .producto-categoria, .producto-agregar,
+    .tienda-carrito-resumen, .icono-carrito, .icono-contacto,
+    .admin-etiqueta, .tienda-volver, .lk-ra { color: var(--violeta); }
+    .producto-agregar { border-color: var(--violeta); }
+    .admin-volver:hover, .admin-boton-secundario:hover,
+    .admin-pestana:hover { border-color: var(--violeta); }
+    .admin-volver:hover, .admin-boton-secundario:hover { color: var(--violeta); }
+    .lk-ra { text-shadow: none; }
 }
