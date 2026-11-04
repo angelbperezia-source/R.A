@@ -1156,3 +1156,169 @@ header { background-color: rgba(255, 255, 255, 0.92); }
     pointer-events: none;
 }
 .panal-activo body { background: var(--fondo); }
+
+/* =====================================================
+   Celulares con foto: modelos flotantes y escenas del taller
+   ===================================================== */
+.flota { will-change: transform; }
+.foto-celu { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+
+/* sombra según modo día / noche */
+.foto-celu { filter: drop-shadow(0 14px 16px rgba(69, 34, 184, 0.28)); }
+@media (prefers-color-scheme: dark) {
+    .foto-celu { filter: drop-shadow(0 0 16px rgba(132, 213, 233, 0.22)) drop-shadow(0 10px 14px rgba(0, 0, 0, 0.6)); }
+}
+
+/* pausa las animaciones cuando el bloque no se ve (JS agrega .js-anim y .visto) */
+.js-anim .anim-grupo:not(.visto),
+.js-anim .anim-grupo:not(.visto) * { animation-play-state: paused !important; }
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+    50% { transform: translateY(-11px) rotate(calc(var(--rot, 0deg) + 1.6deg)); }
+}
+
+/* --- Hero: dos Galaxy A16 flotando alrededor del seguimiento --- */
+.hero-visual { position: relative; }
+.modelos-flotantes { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.modelo-a, .modelo-b { position: absolute; }
+.modelo-a { left: 0.4rem; top: 58%; width: clamp(3.6rem, 7vw, 5rem); }
+.modelo-b { right: 0.9rem; top: 1%; width: clamp(3.6rem, 7vw, 5rem); }
+.modelo-a .foto-celu { --rot: -9deg; animation: flotar 6.5s ease-in-out infinite; }
+.modelo-b .foto-celu { --rot: 8deg; animation: flotar 7.5s ease-in-out -2.5s infinite; }
+
+/* --- Tienda: par de modelos entre el título y el carrito --- */
+.modelos-tienda { display: flex; align-items: flex-end; gap: 0.6rem; margin-left: auto; pointer-events: none; }
+.modelos-tienda .flota { width: clamp(3rem, 5vw, 4.2rem); }
+.modelos-tienda .flota:nth-child(1) .foto-celu { --rot: -7deg; animation: flotar 6s ease-in-out infinite; }
+.modelos-tienda .flota:nth-child(2) .foto-celu { --rot: 6deg; animation: flotar 7s ease-in-out -3s infinite; }
+.modelos-tienda .flota:nth-child(2) { margin-bottom: 0.9rem; }
+@media (max-width: 760px) { .modelos-tienda { display: none; } }
+
+/* --- Taller: escenas con foto --- */
+.taller-item .celu-caja-foto { width: 100%; max-width: 13rem; margin: 0 auto 1.1rem; }
+.taller-item .celu-caja-ancha { max-width: 16rem; }
+.foto-escena { position: relative; display: grid; height: 13rem; place-items: center; }
+.foto-escena .flota { display: grid; height: 100%; place-items: center; }
+.foto-escena .foto-celu { width: auto; max-width: 100%; height: 12.5rem; object-fit: contain; }
+.foto-reparando .foto-celu { width: 100%; height: auto; max-height: 12.5rem; }
+
+/* El barrido revela primero el teléfono apagado y después la pantalla encendida. */
+.foto-secuencia { isolation: isolate; }
+.foto-secuencia .foto-secuencia-imagen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    max-width: 100%;
+    height: 12.5rem;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+}
+.foto-secuencia .taller-imagen-rota { animation: tallerRoto 8s linear infinite; }
+.foto-secuencia .taller-imagen-t2 {
+    clip-path: inset(0 0 100% 0);
+    animation: tallerRevela 8s linear infinite;
+}
+.foto-secuencia .taller-imagen-t3 { animation: tallerEnciende 8s ease-in-out infinite; }
+.foto-secuencia .foto-barrido {
+    position: absolute;
+    top: 6%;
+    left: 24%;
+    width: 52%;
+    height: 7px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent, var(--cian), transparent);
+    box-shadow: 0 0 14px 2px rgba(132, 213, 233, 0.8);
+    opacity: 0;
+    animation: tallerBarrido 8s linear infinite;
+}
+@keyframes tallerRoto {
+    0%, 45% { opacity: 1; }
+    64% { opacity: 1; }
+    68%, 97% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes tallerRevela {
+    0%, 45% { opacity: 0; clip-path: inset(0 0 100% 0); }
+    49% { opacity: 1; clip-path: inset(0 0 76% 0); }
+    65%, 69% { opacity: 1; clip-path: inset(0); }
+    76%, 100% { opacity: 0; clip-path: inset(0); }
+}
+@keyframes tallerEnciende {
+    0%, 70% { opacity: 0; filter: brightness(0.35) drop-shadow(0 0 0 transparent); }
+    73% { opacity: 0.35; filter: brightness(1.8) drop-shadow(0 0 1rem var(--cian)); }
+    80% { opacity: 1; filter: brightness(1.15) drop-shadow(0 0 0.65rem var(--cian)); }
+    92% { opacity: 1; filter: brightness(1) drop-shadow(0 0 0.35rem var(--cian)); }
+    98%, 100% { opacity: 0; filter: brightness(1); }
+}
+@keyframes tallerBarrido {
+    0%, 46% { top: 6%; opacity: 0; }
+    48% { opacity: 0.9; }
+    64% { top: 88%; opacity: 0.9; }
+    66%, 100% { top: 88%; opacity: 0; }
+}
+
+/* en reparación: el equipo "trabaja", chispa sobre la placa y barra de progreso */
+.foto-reparando .foto-celu { transform-origin: 50% 80%; animation: trabajo 3.6s ease-in-out infinite; }
+.foto-reparando .foto-chispa {
+    position: absolute;
+    top: 33%;
+    left: 47%;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0 12%, var(--cian) 35%, transparent 70%);
+    opacity: 0;
+    animation: chispa 2.4s ease-in-out infinite;
+}
+.foto-reparando .foto-progreso {
+    position: absolute;
+    right: 12%;
+    bottom: -0.2rem;
+    left: 12%;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--linea);
+}
+.foto-reparando .foto-progreso i {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--violeta), var(--cian));
+    transform-origin: left center;
+    animation: progreso 8s infinite;
+}
+@keyframes trabajo {
+    0%, 100% { transform: rotate(-1.2deg) translateY(0); }
+    35% { transform: rotate(0.8deg) translateY(-3px); }
+    70% { transform: rotate(-0.4deg) translateY(1px); }
+}
+@keyframes chispa {
+    0%, 55%, 100% { opacity: 0; transform: scale(0.5); }
+    62% { opacity: 1; transform: scale(1.2); }
+    74% { opacity: 0.2; transform: scale(0.8); }
+    82% { opacity: 0.9; transform: scale(1); }
+}
+
+/* mini versión en la tarjeta de contacto */
+.celu-contacto .foto-mini { width: min(100%, 8.5rem); height: auto; }
+.celu-contacto .foto-mini .flota { height: auto; }
+.celu-contacto .foto-mini .foto-celu { width: 100%; height: auto; }
+.celu-contacto .foto-mini .foto-chispa { width: 1.1rem; height: 1.1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+    .flota { transform: none !important; }
+    .foto-celu, .foto-rota .foto-barrido, .foto-rota .foto-ok,
+    .foto-reparando .foto-chispa, .foto-reparando .foto-progreso i { animation: none !important; }
+    .foto-rota .foto-barrido, .foto-reparando .foto-chispa { opacity: 0; }
+    .foto-secuencia .taller-imagen-rota,
+    .foto-secuencia .taller-imagen-t2,
+    .foto-secuencia .taller-imagen-t3 { animation: none; }
+    .foto-secuencia .taller-imagen-rota { opacity: 1; }
+    .foto-secuencia .taller-imagen-t2,
+    .foto-secuencia .taller-imagen-t3,
+    .foto-secuencia .foto-barrido { opacity: 0; }
+}

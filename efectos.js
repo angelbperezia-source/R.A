@@ -163,3 +163,47 @@
 
     medir();
 })();
+
+/* ---------- Celulares con foto: se animan al verse y siguen suave al mouse ---------- */
+(function () {
+    var grupos = document.querySelectorAll(".anim-grupo");
+    var flotas = document.querySelectorAll("[data-flota]");
+    if (!grupos.length) return;
+    var reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var html = document.documentElement;
+
+    // 1) Las animaciones solo corren mientras el bloque está en pantalla (ahorra batería)
+    if (!reducido && "IntersectionObserver" in window) {
+        html.classList.add("js-anim");
+        var io = new IntersectionObserver(function (entradas) {
+            entradas.forEach(function (en) { en.target.classList.toggle("visto", en.isIntersecting); });
+        }, { rootMargin: "80px 0px" });
+        grupos.forEach(function (g) { io.observe(g); });
+    }
+
+    // 2) Parallax: cada celular se mueve un poco distinto según su data-flota
+    if (reducido || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    var tx = 0, ty = 0, cx = 0, cy = 0, corriendo = false;
+
+    function paso() {
+        cx += (tx - cx) * 0.08;
+        cy += (ty - cy) * 0.08;
+        flotas.forEach(function (el) {
+            var k = parseFloat(el.getAttribute("data-flota")) || 0.5;
+            el.style.transform = "translate3d(" + (cx * k * 14).toFixed(2) + "px," + (cy * k * 14).toFixed(2) + "px,0)";
+        });
+        if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) requestAnimationFrame(paso);
+        else corriendo = false;
+    }
+
+    addEventListener("pointermove", function (e) {
+        tx = (e.clientX / innerWidth - 0.5) * 2;
+        ty = (e.clientY / innerHeight - 0.5) * 2;
+        if (!corriendo) { corriendo = true; requestAnimationFrame(paso); }
+    }, { passive: true });
+
+    document.documentElement.addEventListener("mouseleave", function () {
+        tx = 0; ty = 0;
+        if (!corriendo) { corriendo = true; requestAnimationFrame(paso); }
+    });
+})();
